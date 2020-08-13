@@ -260,10 +260,16 @@ public class LegoBrickThing extends VirtualThing {
 
     @ThingworxServiceDefinition(name = "DisconnectRobot",
                                 description = "Disconnect motors and sensors")
-    @ThingworxServiceResult(name = "result", description = "", baseType = "NOTHING")
-    public void DisconnectRobot() {
-        logger.debug("Disconnect agent application from robot");
-        robot.getLego().disconnectMotorsAndSensors();
+    @ThingworxServiceResult(name = "result", description = "", baseType = "BOOLEAN")
+    public boolean DisconnectRobot() {
+        try {
+            logger.debug("Disconnect agent application from robot");
+            robot.getLego().disconnectMotorsAndSensors();
+        } catch(Exception exception) {
+            return false;
+        }
+
+        return true;
     }
 
     @ThingworxServiceDefinition(name = "StopAgent",
@@ -289,10 +295,16 @@ public class LegoBrickThing extends VirtualThing {
     @ThingworxServiceDefinition(name = "ConnectRobot",
                                 description = "Connect to LEgo EV3 and connect robot motors and " +
                                         "sensors")
-    @ThingworxServiceResult(name = "result", description = "", baseType = "NOTHING")
-    public void ConnectRobot() {
-        logger.debug("Connect agent application with robot and initialize motors and sensors");
-        robot.initialise();
+    @ThingworxServiceResult(name = "result", description = "", baseType = "BOOLEAN")
+    public boolean ConnectRobot() {
+        try {
+            logger.debug("Connect agent application with robot and initialize motors and sensors");
+            robot.initialise();
+        } catch(Exception exception) {
+            return false;
+        }
+
+        return true;
     }
 
 

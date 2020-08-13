@@ -29,7 +29,7 @@ public class RobotArm {
         this.program1 = new ArmProgram(lego);
     }
 
-    public void initialise() {
+    public void initialise() throws Exception {
         Boolean allOk;
         try {
             allOk = lego.connectToBrick(brickIp);
@@ -83,6 +83,7 @@ public class RobotArm {
             }
         } catch (Exception e) {
             logger.error("Something went wrong when connecting to Robot with RemoteEV3", e);
+            throw new Exception();
         }
     }
 
