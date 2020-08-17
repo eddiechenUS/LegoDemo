@@ -51,7 +51,7 @@ public class RobotArmApplication {
                 logger.info("The client is now connected.");
 
                 while (!client.isShutdown()) {
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                     thing.processScanRequest();
                 }
             } else {
