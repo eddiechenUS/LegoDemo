@@ -265,7 +265,7 @@ public class LegoBrickThing extends VirtualThing {
         try {
             logger.debug("Disconnect agent application from robot");
             robot.getLego().disconnectMotorsAndSensors();
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             return false;
         }
 
@@ -300,7 +300,7 @@ public class LegoBrickThing extends VirtualThing {
         try {
             logger.debug("Connect agent application with robot and initialize motors and sensors");
             robot.initialise();
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             return false;
         }
 
@@ -384,7 +384,7 @@ public class LegoBrickThing extends VirtualThing {
                                 description = "Get arm program 1 statistics")
     @ThingworxServiceResult(name = "result", description = "", baseType = "INFOTABLE")
     public InfoTable GetProgram1Statistics() {
-        logger.debug("Get statistics for Program1 in agent requested");
+        //        logger.debug("Get statistics for Program1 in agent requested");
         ProgramStatistics stats = robot.getProgram1().getProgramStatistics();
 
         final InfoTable infoTable = new InfoTable();
@@ -409,7 +409,7 @@ public class LegoBrickThing extends VirtualThing {
                                 description = "Get arm program 1 status (running or not)")
     @ThingworxServiceResult(name = "result", description = "", baseType = "BOOLEAN")
     public Boolean GetProgram1Status() {
-        logger.debug("Get status for Program1 in agent requested");
+        //        logger.debug("Get status for Program1 in agent requested");
         return robot.getProgram1().isProgramLaunched();
     }
 

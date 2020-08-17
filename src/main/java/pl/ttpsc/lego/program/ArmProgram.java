@@ -16,24 +16,25 @@ import static pl.ttpsc.lego.utils.Env.getSysEnvInteger;
 
 public class ArmProgram implements LegoProgram {
 
+    private final static Logger logger = Logger.getLogger(ArmProgram.class);
+    final int initialLift;
+    final int initialHandRelease;
+    final int initialHandGrab;
     private final int speed;
     private final int acceleration;
-
-    private final static Logger logger = Logger.getLogger(ArmProgram.class);
-
-
     private final LegoBrickDevice lego;
-
     private Thread robotThread;
-
     private boolean isProgramExecuted;
-
     private RobotArmStatistics programStatistics;
+
 
     public ArmProgram(final LegoBrickDevice lego) throws SystemEnvNotFoundException {
 
         speed = getSysEnvInteger("PROGRAM1_SPEED");
         acceleration = getSysEnvInteger("PROGRAM1_ACCELERATION");
+        initialLift = getSysEnvInteger("INITIAL_LIFT");
+        initialHandRelease = getSysEnvInteger("INITIAL_HAND_RELEASE");
+        initialHandGrab = getSysEnvInteger("INITIAL_HAND_GRAB");
 
         this.lego = lego;
         programStatistics = new RobotArmStatistics();
@@ -73,7 +74,8 @@ public class ArmProgram implements LegoProgram {
             prepareMotors();
 
             try {
-
+                liftToNormalStartupPosition();
+                Thread.sleep(5000);
                 while (isProgramExecuted) {
                     if (lego.getSensorServices()
                             .sensorIsObjectPresent(ArmSensors.DISTANCE.getMark())) {
@@ -91,7 +93,7 @@ public class ArmProgram implements LegoProgram {
 
                 endProgramOnBrick();
 
-            } catch (RemoteException e) {
+            } catch (RemoteException | InterruptedException e) {
                 logger.error("Problem when executing robot arm program.", e);
             }
         }
@@ -169,23 +171,26 @@ public class ArmProgram implements LegoProgram {
         }
 
         private void liftToNormalStartupPosition() throws RemoteException {
-            lego.getMotorServices().motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), 0);
+            lego.getMotorServices().motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), initialLift);
         }
 
         private void liftMore() throws RemoteException {
-            lego.getMotorServices().motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), -100);
+            lego.getMotorServices()
+                .motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), initialLift - 100);
         }
 
         private void unlift() throws RemoteException {
-            lego.getMotorServices().motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), 255);
+            lego.getMotorServices()
+                .motorRotateTo(ArmMotors.LIFT_MOTOR.getMark(), initialLift + 255);
         }
 
         private void grab() throws RemoteException {
-            lego.getMotorServices().motorRotateTo(ArmMotors.HAND_MOTOR.getMark(), 80);
+            lego.getMotorServices().motorRotateTo(ArmMotors.HAND_MOTOR.getMark(), initialHandGrab);
         }
 
         private void ungrab() throws RemoteException {
-            lego.getMotorServices().motorRotateTo(ArmMotors.HAND_MOTOR.getMark(), 0);
+            lego.getMotorServices()
+                .motorRotateTo(ArmMotors.HAND_MOTOR.getMark(), initialHandRelease);
         }
 
         private void prepareMotors() {

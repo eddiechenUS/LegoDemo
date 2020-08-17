@@ -14,7 +14,7 @@ import static pl.ttpsc.lego.utils.Env.getSysEnv;
 public class RobotArm {
 
     private final static Logger logger = Logger.getLogger(RobotArm.class);
-    
+
     private final String brickIp;
 
     @Getter
@@ -42,8 +42,8 @@ public class RobotArm {
                                     + lego.getBrickServices().getName()
                                     + " - brick not connected.");
             }
-            
-            if(allOk) {
+
+            if (allOk) {
                 // Only if the Lego Brick is connected
                 allOk &= lego.connectToMotor(ArmMotors.LIFT_MOTOR);
                 allOk &= lego.connectToMotor(ArmMotors.HAND_MOTOR);
@@ -60,7 +60,7 @@ public class RobotArm {
                 allOk &= lego.connectToSensor(ArmSensors.DISTANCE);
                 allOk &= lego.connectToSensor(ArmSensors.COLOR);
                 allOk &= lego.connectToSensor(ArmSensors.GYRO);
-                allOk &= lego.connectToSensor(ArmSensors.TOUCH);
+                //                allOk &= lego.connectToSensor(ArmSensors.TOUCH);
 
                 if (allOk) {
                     logger.info("Robot with RemoteEV3 "
@@ -72,8 +72,8 @@ public class RobotArm {
                                         + " - some sensors not connected.");
                 }
             }
-            
-            if(!allOk) {
+
+            if (!allOk) {
                 // Disconnect all if connection had any trouble
                 logger.info("Robot with RemoteEV3 "
                                     + lego.getBrickServices().getName()
