@@ -20,6 +20,7 @@ public class ArmProgram implements LegoProgram {
     final int initialLift;
     final int initialHandRelease;
     final int initialHandGrab;
+    final int grabFirst;
     private final int speed;
     private final int acceleration;
     private final LegoBrickDevice lego;
@@ -35,6 +36,7 @@ public class ArmProgram implements LegoProgram {
         initialLift = getSysEnvInteger("INITIAL_LIFT");
         initialHandRelease = getSysEnvInteger("INITIAL_HAND_RELEASE");
         initialHandGrab = getSysEnvInteger("INITIAL_HAND_GRAB");
+        grabFirst = getSysEnvInteger("GRAB_FIRST");
 
         this.lego = lego;
         programStatistics = new RobotArmStatistics();
@@ -100,13 +102,28 @@ public class ArmProgram implements LegoProgram {
 
         private void grabAndMoveObject() throws RemoteException {
             unlift();
-            grab();
             Color color = Color.NONE;
-            for (int i = 0; i < 20; i++) {
-                color = lego.getSensorServices().sensorGetColor(ArmSensors.COLOR.getMark());
-                if (color != Color.NONE) {
-                    break;
+            if (1 == grabFirst) {
+                logger.info("Grab and then check color");
+                grab();
+//                Delay.msDelay(1500); // so the robot stabilized
+                for (int i = 0; i < 20; i++) {
+                    color = lego.getSensorServices().sensorGetColor(ArmSensors.COLOR.getMark());
+                    if (color != Color.NONE) {
+                        break;
+                    }
+                    Delay.msDelay(100); // so the robot stabilized
                 }
+            } else {
+                logger.info("Check color and then grab");
+                for (int i = 0; i < 20; i++) {
+                    color = lego.getSensorServices().sensorGetColor(ArmSensors.COLOR.getMark());
+                    if (color != Color.NONE) {
+                        break;
+                    }
+                    Delay.msDelay(100); // so the robot stabilized
+                }
+                grab();
             }
             playSound(color);
             updateStatistics(color);
